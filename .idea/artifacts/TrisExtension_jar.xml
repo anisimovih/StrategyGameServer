@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TrisExtension:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TrisExtension_jar</output-path>
+    <root id="archive" name="TrisExtension.jar">
+      <element id="module-output" name="TrisExtension" />
+      <element id="extracted-dir" path="C:/programs/SmartFoxServer/SmartFoxServer_2X/SFS2X/lib/sfs2x.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/programs/SmartFoxServer/SmartFoxServer_2X/SFS2X/lib/sfs2x-core.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
