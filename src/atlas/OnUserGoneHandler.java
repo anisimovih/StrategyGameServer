@@ -1,3 +1,5 @@
+package atlas;
+
 import java.util.Map;
 
 import com.smartfoxserver.v2.core.ISFSEvent;

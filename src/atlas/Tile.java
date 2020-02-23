@@ -1,3 +1,5 @@
+package atlas;
+
 public enum Tile
 {
 	EMPTY(0),

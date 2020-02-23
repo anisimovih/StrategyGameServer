@@ -1,3 +1,5 @@
+package atlas;
+
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
@@ -12,13 +14,13 @@ public class ReadyHandler extends BaseClientRequestHandler
 		if (user.isPlayer())
 		{
 			// Checks if two players are available and start game
-			if (gameExt.getGameRoom().getSize().getUserCount() == 2)
+			if (gameExt.getGameRoom().getSize().getUserCount() == 1)
 				gameExt.startGame();
 		}
 		
 		else
 		{
-			gameExt.updateSpectator(user);
+			//gameExt.updateSpectator(user);
 			
 			LastGameEndResponse endResponse = gameExt.getLastGameEndResponse();
 			

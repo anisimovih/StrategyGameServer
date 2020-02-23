@@ -1,6 +1,9 @@
+package atlas;
+
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.entities.Room;
 import com.smartfoxserver.v2.entities.User;
+import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.SFSExtension;
@@ -8,10 +11,12 @@ import com.smartfoxserver.v2.extensions.SFSExtension;
 public class TrisExtension extends SFSExtension
 {
 	private TrisGameBoard gameBoard;
-	private User whoseTurn;
+	//private User whoseTurn;
 	private volatile boolean gameStarted;
 	private LastGameEndResponse lastGameEndResponse;
-	private int moveCount;
+	//private int moveCount;
+	private int userDataRecv;
+	private ISFSObject userData;
 	
 	private final String version = "1.0.5";
 	
@@ -20,7 +25,8 @@ public class TrisExtension extends SFSExtension
 	{
 		trace("Tris game Extension for SFS2X started, rel. " + version);
 		
-		moveCount = 0;
+		//moveCount = 0;
+		userDataRecv = 0;
 		gameBoard = new TrisGameBoard();
 		
 	    addRequestHandler("move", MoveHandler.class);
@@ -44,29 +50,59 @@ public class TrisExtension extends SFSExtension
 	    return gameBoard;
     }
 	
-	User getWhoseTurn()
+	/*User getWhoseTurn()
     {
 	    return whoseTurn;
-    }
+    }*/
 	
-	void setTurn(User user)
+	/*void setTurn(User user)
 	{
 		whoseTurn = user;
-	}
-	
-	void updateTurn()
+	}*/
+
+	/*void updateTurn()
 	{
 		whoseTurn = getParentRoom().getUserByPlayerId( whoseTurn.getPlayerId() == 1 ? 2 : 1 );
-	}
+	}*/
 	
-	public int getMoveCount()
+	/*public int getMoveCount()
     {
 	    return moveCount;
-    }
+    }*/
 	
-	public void increaseMoveCount()
+	/*public void increaseMoveCount()
 	{
 		++moveCount;
+	}*/
+
+	public ISFSObject getUserData()
+	{
+		return userData;
+	}
+
+	public void addUserData(int id, ISFSArray moveX, ISFSArray moveY)
+	{
+		if (!userData.containsKey(id + "X"))
+		{
+			increaseUserDataRecvCount();
+		}
+		userData.putSFSArray(id + "X", moveX);
+		userData.putSFSArray(id + "Y", moveY);
+	}
+
+	public void clearUserData()
+	{
+		userData = new SFSObject();
+	}
+
+	public int getUserDataRecvCount()
+	{
+		return userDataRecv;
+	}
+
+	public void increaseUserDataRecvCount()
+	{
+		++userDataRecv;
 	}
 	
 	boolean isGameStarted()
@@ -87,17 +123,18 @@ public class TrisExtension extends SFSExtension
 		User player2 = getParentRoom().getUserByPlayerId(2);
 		
 		// No turn assigned? Let's start with player 1
-		if (whoseTurn == null)
-			whoseTurn = player1;
+		/*if (whoseTurn == null)
+			whoseTurn = player1;*/
 		
 		// Send START event to client
 		ISFSObject resObj = new SFSObject();
-		resObj.putInt("t", whoseTurn.getPlayerId());
+		/*resObj.putInt("t", whoseTurn.getPlayerId());
 		resObj.putUtfString("p1n", player1.getName());
 		resObj.putInt("p1i", player1.getId());
 		resObj.putUtfString("p2n", player2.getName());
-		resObj.putInt("p2i", player2.getId());
-		
+		resObj.putInt("p2i", player2.getId());*/
+		resObj.putInt("t", 0);
+
 		send("start", resObj, getParentRoom().getUserList());
 	}
 	
@@ -109,8 +146,8 @@ public class TrisExtension extends SFSExtension
 	void stopGame(boolean resetTurn)
 	{
 		gameStarted = false;
-		moveCount = 0;
-		whoseTurn = null;
+		//moveCount = 0;
+		//whoseTurn = null;
 	}
 	
 	Room getGameRoom()
@@ -128,7 +165,7 @@ public class TrisExtension extends SFSExtension
 	    this.lastGameEndResponse = lastGameEndResponse;
     }
 	
-	void updateSpectator(User user)
+	/*void updateSpectator(User user)
 	{
 		ISFSObject resObj = new SFSObject();
 		
@@ -157,7 +194,5 @@ public class TrisExtension extends SFSExtension
 		}
 		
 		send("specStatus", resObj, user);
-	}
-	
-	
+	}*/
 }

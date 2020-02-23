@@ -1,3 +1,5 @@
+package atlas;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -7,7 +9,7 @@ import com.smartfoxserver.v2.entities.data.SFSArray;
 
 public final class TrisGameBoard
 {
-	private static final int BOARD_SIZE = 4;
+	private static final int BOARD_SIZE = 12;
 	private final Tile[][] board;
 	private int winner = 0;
 	
@@ -84,10 +86,10 @@ public final class TrisGameBoard
 	private void checkCoords(int x, int y)
 	{
 		if (x < 1 || x > 3)
-			throw new IllegalArgumentException("Tile X position out of range: " + x);
+			throw new IllegalArgumentException("tris.Tile X position out of range: " + x);
 		
 		if (y < 1 || y > 3)
-			throw new IllegalArgumentException("Tile Y position out of range: " + y);
+			throw new IllegalArgumentException("tris.Tile Y position out of range: " + y);
 	}
 	
 	private List<String> getAllSolutions()
