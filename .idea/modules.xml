@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TrisExtension.iml" filepath="$PROJECT_DIR$/TrisExtension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AtlasExtension.iml" filepath="$PROJECT_DIR$/AtlasExtension.iml" />
     </modules>
   </component>
 </project>

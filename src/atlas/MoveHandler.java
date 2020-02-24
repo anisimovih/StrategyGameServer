@@ -19,7 +19,7 @@ public class MoveHandler extends BaseClientRequestHandler
     public void handleClientRequest(User user, ISFSObject params)
     {
         // Check params
-        if (!params.containsKey("moveX") || !params.containsKey("moveX"))
+        if (!params.containsKey("moveX") || !params.containsKey("moveY"))
             throw new SFSRuntimeException("Invalid request, one mandatory param is missing. Required 'x' and 'y'");
 
         TrisExtension gameExt = (TrisExtension) getParentExtension();
@@ -27,17 +27,17 @@ public class MoveHandler extends BaseClientRequestHandler
 
         ISFSArray moveX = params.getSFSArray("moveX");
         ISFSArray moveY = params.getSFSArray("moveY");
-        /*int moveXSize = moveX.size();
-        int moveYSize = moveY.size();*/
 
         gameExt.trace(String.format("Handling move from player %s. (%s, %s)", user.getPlayerId(), moveX, moveY));
 
         if (gameExt.isGameStarted())
         {
             gameExt.addUserData(user.getPlayerId(), moveX, moveY);
+            gameExt.trace(String.format("Update data from user %s.", user.getPlayerId()));
             if (gameExt.getUserDataRecvCount() == gameExt.getGameRoom().getSize().getUserCount())
             {
                 send(CMD_MOVE, gameExt.getUserData(), gameExt.getGameRoom().getUserList());
+                gameExt.trace(String.format("Send data to users %s.", gameExt.getGameRoom().getUserList()));
                 gameExt.clearUserData();
             }
         }

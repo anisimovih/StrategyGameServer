@@ -15,8 +15,8 @@ public class TrisExtension extends SFSExtension
 	private volatile boolean gameStarted;
 	private LastGameEndResponse lastGameEndResponse;
 	//private int moveCount;
-	private int userDataRecv;
-	private ISFSObject userData;
+	private int userDataRecv = 0;
+	private ISFSObject userData = new SFSObject();
 	
 	private final String version = "1.0.5";
 	
@@ -26,7 +26,6 @@ public class TrisExtension extends SFSExtension
 		trace("Tris game Extension for SFS2X started, rel. " + version);
 		
 		//moveCount = 0;
-		userDataRecv = 0;
 		gameBoard = new TrisGameBoard();
 		
 	    addRequestHandler("move", MoveHandler.class);
@@ -102,7 +101,7 @@ public class TrisExtension extends SFSExtension
 
 	public void increaseUserDataRecvCount()
 	{
-		++userDataRecv;
+		userDataRecv++;
 	}
 	
 	boolean isGameStarted()
@@ -119,11 +118,11 @@ public class TrisExtension extends SFSExtension
 		gameStarted = true;
 		gameBoard.reset();
 		
-		User player1 = getParentRoom().getUserByPlayerId(1);
+		/*User player1 = getParentRoom().getUserByPlayerId(1);
 		User player2 = getParentRoom().getUserByPlayerId(2);
 		
 		// No turn assigned? Let's start with player 1
-		/*if (whoseTurn == null)
+		if (whoseTurn == null)
 			whoseTurn = player1;*/
 		
 		// Send START event to client

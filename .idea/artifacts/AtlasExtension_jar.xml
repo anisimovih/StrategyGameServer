@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AtlasExtension:jar">
+    <output-path>C:/programs/SmartFoxServer/SmartFoxServer_2X/SFS2X/extensions/Atlas</output-path>
+    <root id="archive" name="AtlasExtension.jar">
+      <element id="module-output" name="AtlasExtension" />
+      <element id="extracted-dir" path="C:/programs/SmartFoxServer/SmartFoxServer_2X/SFS2X/lib/sfs2x-core.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/programs/SmartFoxServer/SmartFoxServer_2X/SFS2X/lib/sfs2x.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
