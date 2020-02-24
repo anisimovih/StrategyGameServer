@@ -13,9 +13,7 @@ public class OnSpectatorToPlayerHandler extends BaseServerEventHandler
 		TrisExtension gameExt = (TrisExtension) getParentExtension();
 		System.out.println("Player was switched: " +  event.getParameter(SFSEventParam.USER));
 		System.out.println("Room: " + gameExt.getGameRoom() + " => " + gameExt.getGameRoom().getSize());
-		
-		// Checks if two players are available and start game
-		if (gameExt.getGameRoom().getSize().getUserCount() == 2)
-			gameExt.startGame();
+
+		gameExt.tryStartGame(gameExt.getGameRoom());
 	}
 }

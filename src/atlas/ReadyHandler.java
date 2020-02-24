@@ -13,9 +13,7 @@ public class ReadyHandler extends BaseClientRequestHandler
 
 		if (user.isPlayer())
 		{
-			// Checks if two players are available and start game
-			if (gameExt.getGameRoom().getSize().getUserCount() == 1)
-				gameExt.startGame();
+			gameExt.tryStartGame(gameExt.getGameRoom());
 		}
 		
 		else

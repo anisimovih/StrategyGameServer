@@ -10,9 +10,7 @@ public class RestartHandler extends BaseClientRequestHandler
 	public void handleClientRequest(User user, ISFSObject params)
 	{
 		TrisExtension gameExt = (TrisExtension) getParentExtension();
-		
-		// Checks if two players are available and start game
-		if (gameExt.getGameRoom().getSize().getUserCount() == 2)
-			gameExt.startGame();
+
+		gameExt.tryStartGame(gameExt.getGameRoom());
 	}
 }

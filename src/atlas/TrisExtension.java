@@ -108,33 +108,26 @@ public class TrisExtension extends SFSExtension
 	{
 		return gameStarted;
 	}
-	
-	void startGame()
+
+	// Start the game if the conditions are met.
+	void tryStartGame(Room room)
 	{
 		if (gameStarted)
 			throw new IllegalStateException("Game is already started!");
-		
-		lastGameEndResponse = null;
-		gameStarted = true;
-		gameBoard.reset();
-		
-		/*User player1 = getParentRoom().getUserByPlayerId(1);
-		User player2 = getParentRoom().getUserByPlayerId(2);
-		
-		// No turn assigned? Let's start with player 1
-		if (whoseTurn == null)
-			whoseTurn = player1;*/
-		
-		// Send START event to client
-		ISFSObject resObj = new SFSObject();
-		/*resObj.putInt("t", whoseTurn.getPlayerId());
-		resObj.putUtfString("p1n", player1.getName());
-		resObj.putInt("p1i", player1.getId());
-		resObj.putUtfString("p2n", player2.getName());
-		resObj.putInt("p2i", player2.getId());*/
-		resObj.putInt("t", 0);
 
-		send("start", resObj, getParentRoom().getUserList());
+		if (room.getSize().getUserCount() == room.getMaxUsers())
+		{
+			lastGameEndResponse = null;
+			gameStarted = true;
+			gameBoard.reset();
+			/*User player1 = getParentRoom().getUserByPlayerId(1);
+			User player2 = getParentRoom().getUserByPlayerId(2);*/
+
+			// Send START event to client
+			ISFSObject resObj = new SFSObject();
+			resObj.putInt("playersNum", room.getMaxUsers());
+			send("start", resObj, getParentRoom().getUserList());
+		}
 	}
 	
 	void stopGame()
