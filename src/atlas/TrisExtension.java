@@ -1,22 +1,26 @@
 package atlas;
 
+import atlas.Charracters.Charracter;
+import atlas.Charracters.Drone;
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.entities.Room;
 import com.smartfoxserver.v2.entities.User;
-import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
+import com.smartfoxserver.v2.extensions.ExtensionLogLevel;
 import com.smartfoxserver.v2.extensions.SFSExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrisExtension extends SFSExtension
 {
+	Player[] players;
 	private TrisGameBoard gameBoard;
-	//private User whoseTurn;
 	private volatile boolean gameStarted;
 	private LastGameEndResponse lastGameEndResponse;
-	//private int moveCount;
-	private int userDataRecv = 0;
-	private ISFSObject userData = new SFSObject();
+
+
 	
 	private final String version = "1.0.5";
 	
@@ -24,10 +28,9 @@ public class TrisExtension extends SFSExtension
 	public void init()
 	{
 		trace("Tris game Extension for SFS2X started, rel. " + version);
-		
-		//moveCount = 0;
 		gameBoard = new TrisGameBoard();
-		
+		players = new Player[getGameRoom().getMaxUsers()];
+
 	    addRequestHandler("move", MoveHandler.class);
 	    addRequestHandler("restart", RestartHandler.class);
 	    addRequestHandler("ready", ReadyHandler.class);
@@ -48,62 +51,7 @@ public class TrisExtension extends SFSExtension
     {
 	    return gameBoard;
     }
-	
-	/*User getWhoseTurn()
-    {
-	    return whoseTurn;
-    }*/
-	
-	/*void setTurn(User user)
-	{
-		whoseTurn = user;
-	}*/
 
-	/*void updateTurn()
-	{
-		whoseTurn = getParentRoom().getUserByPlayerId( whoseTurn.getPlayerId() == 1 ? 2 : 1 );
-	}*/
-	
-	/*public int getMoveCount()
-    {
-	    return moveCount;
-    }*/
-	
-	/*public void increaseMoveCount()
-	{
-		++moveCount;
-	}*/
-
-	public ISFSObject getUserData()
-	{
-		return userData;
-	}
-
-	public void addUserData(int id, ISFSArray moveX, ISFSArray moveY)
-	{
-		if (!userData.containsKey(id + "X"))
-		{
-			increaseUserDataRecvCount();
-		}
-		userData.putSFSArray(id + "X", moveX);
-		userData.putSFSArray(id + "Y", moveY);
-	}
-
-	public void clearUserData()
-	{
-		userData = new SFSObject();
-	}
-
-	public int getUserDataRecvCount()
-	{
-		return userDataRecv;
-	}
-
-	public void increaseUserDataRecvCount()
-	{
-		userDataRecv++;
-	}
-	
 	boolean isGameStarted()
 	{
 		return gameStarted;
@@ -120,16 +68,37 @@ public class TrisExtension extends SFSExtension
 			lastGameEndResponse = null;
 			gameStarted = true;
 			gameBoard.reset();
-			/*User player1 = getParentRoom().getUserByPlayerId(1);
-			User player2 = getParentRoom().getUserByPlayerId(2);*/
 
 			// Send START event to client
 			ISFSObject resObj = new SFSObject();
 			resObj.putInt("playersNum", room.getMaxUsers());
+			for (Player player : players)
+			{
+				String userId = Integer.toString(player.user.getPlayerId() - 1);
+				ISFSObject userData = player.getUserStartData();
+				resObj.putSFSObject(userId, userData);
+			}
+
 			send("start", resObj, getParentRoom().getUserList());
 		}
 	}
-	
+
+	void createPlayer(User user, String characterName)
+	{
+		Charracter charracter;
+		if (characterName.equals("Drone"))
+			charracter = new Drone();
+		else
+			charracter = new Drone();
+		trace(ExtensionLogLevel.WARN, "get userId " + (user.getPlayerId() - 1) + " out of " + players.length + " players");
+		players[user.getPlayerId() - 1] = new Player(user, charracter);
+	}
+
+	Player getPlayer(int playerId)
+	{
+		return players[playerId];
+	}
+
 	void stopGame()
 	{
 		stopGame(false);
@@ -156,35 +125,4 @@ public class TrisExtension extends SFSExtension
     {
 	    this.lastGameEndResponse = lastGameEndResponse;
     }
-	
-	/*void updateSpectator(User user)
-	{
-		ISFSObject resObj = new SFSObject();
-		
-		User player1 = getParentRoom().getUserByPlayerId(1);
-		User player2 = getParentRoom().getUserByPlayerId(2);
-		
-		resObj.putInt("t", whoseTurn == null ? 0 : whoseTurn.getPlayerId());
-		resObj.putBool("status", gameStarted);
-		resObj.putSFSArray("board", gameBoard.toSFSArray());
-		
-		if (player1 == null)
-			resObj.putInt("p1i", 0); // <--- indicates no P1
-		else
-		{
-			resObj.putInt("p1i", player1.getId());
-			resObj.putUtfString("p1n", player1.getName());
-		}
-		
-		if (player2 == null)
-			resObj.putInt("p2i", 0); // <--- indicates no P2
-		else
-		{
-			resObj.putInt("p2i", player2.getId());
-			resObj.putUtfString("p2n", player2.getName());
-			
-		}
-		
-		send("specStatus", resObj, user);
-	}*/
 }

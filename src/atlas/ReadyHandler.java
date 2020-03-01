@@ -3,6 +3,7 @@ package atlas;
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
+import com.smartfoxserver.v2.extensions.ExtensionLogLevel;
 
 public class ReadyHandler extends BaseClientRequestHandler
 {
@@ -13,6 +14,9 @@ public class ReadyHandler extends BaseClientRequestHandler
 
 		if (user.isPlayer())
 		{
+			gameExt.trace(ExtensionLogLevel.WARN, "Player with Id " + user.getPlayerId() + " connected");
+			String charracter = params.getText("Hero");
+			gameExt.createPlayer(user, charracter);
 			gameExt.tryStartGame(gameExt.getGameRoom());
 		}
 		
