@@ -31,9 +31,11 @@ public class TrisExtension extends SFSExtension
 		gameBoard = new TrisGameBoard();
 		players = new Player[getGameRoom().getMaxUsers()];
 
+		addRequestHandler("ready", ReadyHandler.class);
 	    addRequestHandler("move", MoveHandler.class);
+		addRequestHandler("end", EndTurnHandler.class);
 	    addRequestHandler("restart", RestartHandler.class);
-	    addRequestHandler("ready", ReadyHandler.class);
+
 	    
 	    addEventHandler(SFSEventType.USER_DISCONNECT, OnUserGoneHandler.class);
 	    addEventHandler(SFSEventType.USER_LEAVE_ROOM, OnUserGoneHandler.class);

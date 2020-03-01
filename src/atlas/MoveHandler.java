@@ -14,21 +14,23 @@ import java.sql.Struct;
 public class MoveHandler extends BaseClientRequestHandler
 {
     private static final String CMD_MOVE = "move";
-    private TrisExtension gameExt = (TrisExtension) getParentExtension();
+    private TrisExtension gameExt;
 
 
     @Override
     public void handleClientRequest(User user, ISFSObject params)
     {
-        int playerId = user.getPlayerId();
+        gameExt = (TrisExtension) getParentExtension();
+        int playerId = user.getPlayerId() - 1;
+
+        gameExt.trace(ExtensionLogLevel.WARN, "Handling data from player %s", playerId);
         Player player = gameExt.getPlayer(playerId);
 
         //ToDo: проверка валидности
-        if (!params.containsKey("moveX") || !params.containsKey("moveY"))
-            throw new SFSRuntimeException("Invalid request, one mandatory param is missing. Required 'x' and 'y'");
+        if (!params.containsKey("moveX") || !params.containsKey("moveZ"))
+            throw new SFSRuntimeException("Invalid request, one mandatory param is missing. Required 'moveX' and 'moveZ'");
 
         player.updateUserData(params);
-        gameExt.trace(String.format("Handling data from player %s.", playerId));
 
         if (gameExt.isGameStarted())
         {
