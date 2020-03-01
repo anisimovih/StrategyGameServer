@@ -14,6 +14,7 @@ final class Player {
     private Collection<Integer> movePathX= new ArrayList<>();
     private Collection<Integer> movePathZ = new ArrayList<>();
     private Boolean dataRecived = false;
+    private Boolean turnEnd = false;
 
     Player(User user, Charracter charracter)
     {
@@ -59,6 +60,21 @@ final class Player {
         {
             dataRecived = true;
         }
+    }
+
+    public void endTurn()
+    {
+        turnEnd = true;
+    }
+
+    public boolean checkTurnEnd()
+    {
+        return turnEnd;
+    }
+
+    public void newTurn()
+    {
+        turnEnd = false;
     }
 
     Boolean checkDataRecived()
