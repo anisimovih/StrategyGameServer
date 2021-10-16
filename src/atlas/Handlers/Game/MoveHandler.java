@@ -1,58 +1,50 @@
-package atlas;
+package atlas.Handlers.Game;
 
+import atlas.Player;
+import atlas.AtlasExtension;
 import com.smartfoxserver.v2.annotations.Instantiation;
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
-import com.smartfoxserver.v2.exceptions.SFSRuntimeException;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 import com.smartfoxserver.v2.extensions.ExtensionLogLevel;
-
-import java.sql.Struct;
 
 @Instantiation(Instantiation.InstantiationMode.SINGLE_INSTANCE)
 public class MoveHandler extends BaseClientRequestHandler
 {
     private static final String CMD_MOVE = "move";
-    private TrisExtension gameExt;
-
+    private AtlasExtension gameExt;
 
     @Override
     public void handleClientRequest(User user, ISFSObject params)
     {
-        gameExt = (TrisExtension) getParentExtension();
-        int playerId = user.getPlayerId() - 1;
+        gameExt = (AtlasExtension) getParentExtension();
 
-        gameExt.trace(ExtensionLogLevel.WARN, "Handling data from player %s", playerId);
-        Player player = gameExt.getPlayer(playerId);
+        if (user.isPlayer()) {
+            int playerId = user.getPlayerId();
 
-        //ToDo: проверка валидности
-        if (!params.containsKey("moveX") || !params.containsKey("moveZ"))
-            throw new SFSRuntimeException("Invalid request, one mandatory param is missing. Required 'moveX' and 'moveZ'");
+            gameExt.trace(ExtensionLogLevel.WARN, "Handling data from player %s", playerId);
+            Player player = gameExt.playersDict.get(playerId);
 
-        player.updateUserData(params);
+            //ToDo: проверка валидности
 
-        if (gameExt.isGameStarted())
-        {
+            player.updateUserData(params);
+
             //ToDo: обработка
-            if (checkAllPlayersDataRecived())
-            {
+            if (checkAllPlayersDataRecived()) {
                 send(CMD_MOVE, getAllUsersData(), gameExt.getGameRoom().getUserList());
                 gameExt.trace("Send data users.");
                 clearAllUsersData();
             }
         }
-        else
-            gameExt.trace(ExtensionLogLevel.WARN, "Game is on pause!");
 
     }
-
 
     private ISFSObject getAllUsersData()
     {
         ISFSObject data = new SFSObject();
 
-        for (Player player : gameExt.players)
+        for (Player player : gameExt.playersDict.values())
         {
             data.putSFSObject(Integer.toString(player.user.getPlayerId() - 1), player.getAllUserData());
         }
@@ -61,7 +53,7 @@ public class MoveHandler extends BaseClientRequestHandler
 
     private void clearAllUsersData()
     {
-        for (Player player : gameExt.players)
+        for (Player player : gameExt.playersDict.values())
         {
            player.clearAllUserData();
         }
@@ -71,9 +63,9 @@ public class MoveHandler extends BaseClientRequestHandler
     {
         int num = 0;
 
-        for (Player player : gameExt.players)
+        for (Player player : gameExt.playersDict.values())
         {
-            if (player.checkDataRecived())
+            if (player.checkDataReceived())
                 num++;
         }
         return num == gameExt.getGameRoom().getSize().getUserCount();

@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/programs/SmartFoxServer/SmartFoxServer_2X/SFS2X/lib/sfs2x.jar!/" />
+          <root url="jar://D:/Programs/GameDev/SmartFoxServer_2X/SFS2X/lib/sfs2x.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -19,7 +19,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/programs/SmartFoxServer/SmartFoxServer_2X/SFS2X/lib/sfs2x-core.jar!/" />
+          <root url="jar://D:/Programs/GameDev/SmartFoxServer_2X/SFS2X/lib/sfs2x-core.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

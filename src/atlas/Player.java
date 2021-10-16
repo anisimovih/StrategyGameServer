@@ -5,60 +5,46 @@ import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
+public class Player {
+    public User user;
+    public Charracter charracter;
+    public Boolean ready = false;
+    public int loadProgress = 0;
 
-final class Player {
-    User user;
-    Charracter charracter;
-    private Collection<Integer> movePathX= new ArrayList<>();
-    private Collection<Integer> movePathZ = new ArrayList<>();
-    private Boolean dataRecived = false;
+    private Boolean dataReceived;
     private Boolean turnEnd = false;
+    private ISFSObject playerData; //ToDo: temporary variable
 
-    Player(User user, Charracter charracter)
+    public Player(User user, Charracter charracter)
     {
         this.user = user;
         this.charracter = charracter;
-        dataRecived = false;
+        dataReceived = false;
     }
 
-    void updateUserData(ISFSObject data)
+    public void updateUserData(ISFSObject data)
     {
         //ToDo: validate
-        movePathX = data.getIntArray("moveX");
-        movePathZ = data.getIntArray("moveZ");
+        playerData = data;
         updateUserDataReceived();
     }
 
-    ISFSObject getAllUserData()
+    public ISFSObject getAllUserData()
     {
-        ISFSObject data = new SFSObject();
-
-        data.putIntArray("moveX", movePathX);
-        data.putIntArray("moveZ", movePathZ);
-        return data;
+        return playerData;
     }
 
-    ISFSObject getUserStartData()
+    public void clearAllUserData()
     {
-        ISFSObject data = new SFSObject();
-
-        data.putUtfString("hero", charracter.getName());
-        return data;
-    }
-
-    void clearAllUserData()
-    {
-        movePathX.clear();
-        movePathZ.clear();
+        playerData = new SFSObject();
+        dataReceived = false;
     }
 
     private void updateUserDataReceived()
     {
-        if (!dataRecived)
+        if (!dataReceived)
         {
-            dataRecived = true;
+            dataReceived = true;
         }
     }
 
@@ -77,8 +63,8 @@ final class Player {
         turnEnd = false;
     }
 
-    Boolean checkDataRecived()
+    public Boolean checkDataReceived()
     {
-        return dataRecived;
+        return dataReceived;
     }
 }
